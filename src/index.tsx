@@ -6,7 +6,6 @@ export {
 
 export { 
   FilterCategoryProps, 
-  FilterCategoriesContext, 
   FilterContextType, 
   ParamFilterProvider 
 } from './paramFilter/ParamFilterProvider';
