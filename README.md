@@ -157,7 +157,5 @@ export function useFoodCategoryFilter () {
 }
 ```
 
-
-
 ### Multiple Param filters
 Currently only supports matching to one param key per page.  However you can instead pass a comma separated list of values to the param in the URL and then work with the value as an array.  I think.  I need to double check that.  
