@@ -14,7 +14,7 @@ interface ProviderProps {
   filterCategories: (FilterCategoryProps | undefined)[];
 }
 
-export function ParamFilterProvider ({ children, filterCategories }: ProviderProps): JSX.Element {
+export function ParamFilterProvider ({ children, filterCategories = [] }: ProviderProps): JSX.Element {
   return (
     <FilterCategoriesContext.Provider value={filterCategories}>
       {children}

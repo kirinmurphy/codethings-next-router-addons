@@ -8,7 +8,7 @@ type FilterContextYpe = Partial<FilterCategoryProps[]>
 export type ParamFilterType = string | null;
 
 interface useParamFilterReturnProps {
-  activeFilterType: ParamFilterType;
+  activeFilterId: ParamFilterType;
   activeFilterName: string;
   filterCategories: FilterContextYpe;
   updateFilter: UpdateParamType;
@@ -27,19 +27,19 @@ export function useParamFilter (paramName:string): useParamFilterReturnProps {
 
   const focusTypes = filterCategories.map(category => category?.id);
 
-  const [activeFilterType, setActiveFilterType] = useState<ParamFilterType>(null);
+  const [activeFilterId, setActiveFilterId] = useState<ParamFilterType>(null);
 
   const activeFilterName = filterCategories
-    .filter(category => category?.id === activeFilterType)[0]?.name || '';
+    .filter(category => category?.id === activeFilterId)[0]?.name || '';
 
   useEffect(() => {
     const hasFocusFilter = !!paramValueFromUrl && focusTypes.includes(paramValueFromUrl); 
-    setActiveFilterType(hasFocusFilter ? paramValueFromUrl : null);   
+    setActiveFilterId(hasFocusFilter ? paramValueFromUrl : null);   
   }, [paramValueFromUrl, focusTypes]);
 
   return { 
     filterCategories,
-    activeFilterType,
+    activeFilterId,
     activeFilterName, 
     updateFilter, 
     clearFilter
