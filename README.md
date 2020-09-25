@@ -1,5 +1,13 @@
-# codethings-next-router-addons 
+# codethings-nextjs-router-addons 
 Created a few custom hooks extending the Next.js useRouter functionality.    
+
+## Install
+```
+npm install codethings-nextjs-router-addons    
+    
+yarn add codethings-nextjs-router-addons    
+```
+
 
 ## useUrlParam
 ```
@@ -32,7 +40,11 @@ paramCollectionFromUrl === ['param1', 'param2', 'param3'];
 ```
 
 ### Set params 
-`updateParam` and `clearParam` will update the active param while persisting any other values.  Updates to the params will be pushed to the browser history stack and previous navigation will be accesible with the back/forward browser buttons.  
+`updateParam` and `clearParam` will update the active param while persisting any other values.      
+
+Updates to the params will be pushed to the browser history stack and previous navigation will be accesible with the back/forward browser buttons.    
+
+***TODO*** Currently `updateParam` will only update a single string.  Need to add logic to update a param that takes a collection.
 
 
 ### Override variable names
@@ -46,11 +58,97 @@ const {
 ```
 
 
-## ParamFilter
-The param filter allows you to match a Url paramter against a white-list of valid filter categories and exposes a hook that provide access to view and change the active filter.
+### Custom Hook Wrapper
+If using the hook for the same param in many places, create a wrapper hook to abstract the param and custom param variable names.
+```
+import { useParamFilter } from 'codethings-nextjs-router-addons';
 
+const SEARCH_PARAM = 'search';
+
+export function useKeywordSearchFilter () {
+ 
+  const { 
+    paramValueFromUrl: keywordSearchValue, 
+    updateParam: updateKeywordSearch, 
+    clearParam: clearKeywordSearch,  
+  } = useParamFilter(SEARCH_PARAM);
+
+  return { 
+    keywordSearchValue,
+    updateKeywordSearch,
+    clearKeywordSearch
+  };
+}
+```
+
+
+### Example: Fetching search results from URL param
+Capture updates to history stack and use that to make api queries when the url state changes.   
+
+#### Search Input Component    
+Using the `useKeywordSearchFilter` wrapper hook just made above: 
+```
+import { useKeywordSearchFilter } from '.utils/useKeywordSearchFilter';
+
+const { 
+  updateKeywordSearch, 
+  clearKeywordSearch
+} = useKeywordSearchFilter();
+
+const [searchInput, setSearchInput] = useState();
+
+<form>
+  <input value={searchInput} onChange={(e) => setSearchInput(e.target.value)}>
+  <button onClick={() => updateKeywordSearch(searchInput)}>
+  <span className="clear" onClick={() => clearKeywordSearch()}>Clear</span>
+</form>
+```
+
+#### Search Results Component
+```
+import { useKeywordSearchFilter } from '.utils/useKeywordSearchFilter';
+
+const { 
+  keywordSearchValue, 
+} = useKeywordSearchFilter();
+
+const [searchResults, setSearchResults] = useState(null);
+
+useEffect(() => {
+  // Abort Controller - allows cleaning up pending requests if component unmounts mind async
+  // Thanks Yurui - https://dev.to/pallymore/clean-up-async-requests-in-useeffect-hooks-90h
+  const abortController = new AbortController();
+
+  const fetchData = async () => {
+    try {
+      const params = !!activeFilterId ? ?${PARAM_NAME_MUSIC_GENRE}={keywordSearchValue}` : '';
+      const path = `api/resource/${params}`;
+      const response = await fetch(path, { signal: abortController.signal });
+      const { searchObject } = await response.json();
+      setSearchResults(searchObject);
+    } catch (e) { 
+      if (!abortController.signal.aborted) {
+        console.log('search api error: ', e.message);
+      }
+    }
+  };
+
+  fetchData();
+
+  return () => abortController.abort();
+}, [keywordSearchValue]);
+```
+
+
+
+
+
+
+
+## Param Category Filter
+The param filter extends `useUrlParam` by including a whitelisted list of valid filter category values that can be used to constrain options to a fixed set of values.
   
-### Param Filter Provider
+### Param Category Filter Provider
 ```
 const foodCategories = [
   { id: 'fruit', name: 'Fruit' },
@@ -62,6 +160,8 @@ const foodCategories = [
   <SomeChildComponentAboutFood>
 </ParamFilterProvider> 
 ```
+***TODO*** Change naming of these ParamFilter... -> ParamCategoryFilter... 
+
 
 ### useParamFilter
 Access the filter props by using the `useParamFilter` in any component within the `ParamFilteProvider`
@@ -77,8 +177,8 @@ const {
 where `activeFilterId` matches to the param in the URL    
 and `activeFilterName` is the corersponding name from the filterCategories collection.
 
-#### For Example:
-in some component we make a dropdown selector for the filter: 
+### Example: In-page filter
+In some component we make a dropdown selector for the filter: 
 ```
 const { 
   filterCategories: foodCategories,
@@ -120,42 +220,9 @@ const {
   const hasActiveFoodType = foodItem.category.id === activeFoodType;
   const showItem = !activeFoodType || hasActiveFoodType;
 
-  return showItem ? (
-    <div key={index} className="food-item">
-      <div className="name">{foodItem.name}</div>
-      <div className="type">{foodItem.category.name}</div>
-    </div>
-  ) : <React.Fragment key={index}>;
+  return showItem 
+    ? <SomeFoodItemComponent foodItem={foodItem} key={index} />
+    : <React.Fragment key={index} />;
 })}
 ```
-
-
-### Custom Hook Wrapper
-If using the hook for the same params in many places, abstract the param and variable renaming into a custom hook wrapper
-```
-import { useParamFilter } from 'codethings-next-router-addons';
-
-const FILTER_PARAM = 'foodCategory';
-
-export function useFoodCategoryFilter () {
- 
-  const { 
-    filterCategories: foodCategories,
-    activeFilterId: activeFoodCategoryId,
-    activeFilterName: activeFoodCategoryName, 
-    updateFilter: updateFoodCategory, 
-    clearFilter: clearFoodCategory 
-  } = useParamFilter(FILTER_PARAM);
-
-  return { 
-    foodCategories,
-    activeFoodCategoryId,
-    activeFoodCategoryName, 
-    updateFoodCategory, 
-    clearFoodCategory
-  };
-}
-```
-
-### Multiple Param filters
-Currently only supports matching to one param key per page.  However you can instead pass a comma separated list of values to the param in the URL and then work with the value as an array.  I think.  I need to double check that.  
+Filtered results are rendered on the page either from calling `updateFilter` anywhere in the code (inside the `<ParamCategoryProvider` />), or directly navigating to the url with the param value.  
