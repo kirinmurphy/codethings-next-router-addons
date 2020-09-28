@@ -5,7 +5,7 @@ import {
   getParamsWithRemovedParam 
 } from './helperQueryParams';
 
-export type UpdateParamType = (arg1: string) => void;
+export type UpdateParamType = (arg1: string | []) => void;
 export type ClearParamType = () => void;
 
 interface UseUrlFilterReturnProps {
