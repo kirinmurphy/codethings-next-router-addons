@@ -5,7 +5,7 @@ import {
   getParamsWithRemovedParam 
 } from './helperQueryParams';
 
-export type UpdateParamType = (arg1: string | []) => void;
+export type UpdateParamType = (arg1: string | string[]) => void;
 export type ClearParamType = () => void;
 
 interface UseUrlFilterReturnProps {
@@ -25,6 +25,7 @@ export function useUrlParam (paramKey: string): UseUrlFilterReturnProps {
 
   const paramValueFromUrl = paramType === 'string' ? paramValue as string : '';
 
+  // ??? - even though paramValue could be string[], can't use isArray here? :/ 
   const paramCollectionFromUrl = paramType !== 'string' ? paramValue as [] : [];
 
   const updateParam = (option: string | string[]) => {
