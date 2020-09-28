@@ -21,15 +21,12 @@ export function useUrlParam (paramKey: string): UseUrlFilterReturnProps {
   
   const paramValue = router.query[paramKey];
   
-  const paramType = typeof(paramValue);
+  const paramValueFromUrl = typeof(paramValue) === 'string' ? paramValue as string : '';
 
-  const paramValueFromUrl = paramType === 'string' ? paramValue as string : '';
-
-  // ??? - even though paramValue could be string[], can't use isArray here? :/ 
-  const paramCollectionFromUrl = paramType !== 'string' ? paramValue as [] : [];
+  const paramCollectionFromUrl = Array.isArray(paramValue) ? paramValue as [] : [];
 
   const updateParam = (option: string | string[]) => {
-    const formattedOption = typeof(option) !== 'string' ? option.join(',') : option;
+    const formattedOption = Array.isArray(option) ? option.join(',') : option;
     const newParams = getParamsWithUpdatedParam(router.query, paramKey, formattedOption);
     router.push(`/${newParams}`);
   };
