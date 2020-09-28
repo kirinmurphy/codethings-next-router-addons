@@ -122,7 +122,7 @@ useEffect(() => {
 
   const fetchData = async () => {
     try {
-      const params = !!activeFilterId ? ?${PARAM_NAME_MUSIC_GENRE}={keywordSearchValue}` : '';
+      const params = !!keywordSearchValue ? ?${PARAM_NAME_MUSIC_GENRE}={keywordSearchValue}` : '';
       const path = `api/resource/${params}`;
       const response = await fetch(path, { signal: abortController.signal });
       const { searchObject } = await response.json();
@@ -220,3 +220,7 @@ const {
 })}
 ```
 Filtered results are rendered on the page either from calling `updateFilter` anywhere in the code (inside the `<UrlParamCategoryFilterProvider />`), or directly navigating to the url with the param value.  
+
+
+### Multiple Category filters on the same page
+Currently only supports one category provider per page. 
