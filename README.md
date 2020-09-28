@@ -45,7 +45,7 @@ Updates to the params will be pushed to the browser history stack and previous n
 
 
 ### Override variable names
-Optionally overide the variable names for clarity or to use multiple hooks in the same component.
+Optionally overide the variable names for clarity or to use the hook multiple times in the same component.
 ```
 const { 
   paramValue: timestampValue, 
@@ -56,7 +56,7 @@ const {
 
 
 ### Custom Hook Wrapper
-If using the hook for the same param in many places, create and export a wrapper hook to abstract the param and custom variable names.
+If using the hook for the same param in many places, create and export a wrapper hook to encapsulate the param and custom variable naming.
 ```
 import { useUrlParam } from 'codethings-nextjs-router-addons';
 
@@ -160,7 +160,7 @@ const foodCategories = [
 ```
 
 ### useUrlParamCategoryFilter
-Access the filter props by using the `useUrlParamCategoryFilter` in any component within the `UrlParamCategoryFilterProvider`
+Access the filter props and methods by using the `useUrlParamCategoryFilter` in any component within the `UrlParamCategoryFilterProvider`
 ```
 const { 
   filterCategories,
