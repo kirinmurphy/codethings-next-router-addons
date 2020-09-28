@@ -18,7 +18,7 @@ interface useUrlParamCategoryFilterReturnProps {
 export function useUrlParamCategoryFilter (paramName:string): useUrlParamCategoryFilterReturnProps {
 
   const { 
-    paramValueFromUrl, 
+    paramValue: filterValue, 
     updateParam: updateFilter, 
     clearParam: clearFilter, 
   } = useUrlParam(paramName);
@@ -33,9 +33,10 @@ export function useUrlParamCategoryFilter (paramName:string): useUrlParamCategor
     .filter(category => category?.id === activeFilterId)[0]?.name || '';
 
   useEffect(() => {
-    const hasFocusFilter = !!paramValueFromUrl && focusTypes.includes(paramValueFromUrl); 
-    setActiveFilterId(hasFocusFilter ? paramValueFromUrl : null);   
-  }, [paramValueFromUrl, focusTypes]);
+    const formattedValue = Array.isArray(filterValue) ? filterValue.join(',') : filterValue;
+    const hasFocusFilter = !!formattedValue && focusTypes.includes(formattedValue); 
+    setActiveFilterId(hasFocusFilter ? formattedValue : null);   
+  }, [filterValue, focusTypes]);
 
   return { 
     filterCategories,

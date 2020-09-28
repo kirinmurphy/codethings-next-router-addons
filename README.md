@@ -12,22 +12,21 @@ yarn add codethings-nextjs-router-addons
 ## useUrlParam
 ```
 const { 
-  paramValueFromUrl,
-  paramCollectionFromUrl
+  paramValue,
   updateParam, 
   clearParam, 
 } = useUrlParam(paramName);
 ```
 
 ### Read param
-`paramValueFromUrl` or `paramCollectionFromUrl` will be populated if there are any matching props in the url. so: 
+`paramValue` will be populated with a string or array based on the prop in the Url. so: 
 
 ```
 https://url.com/?paramName=someParamValue
 
 results in:
 
-paramValueFromUrl === 'someParamValue'
+paramValue === 'someParamValue'
 ```
 
 
@@ -36,7 +35,7 @@ https://url.com/?paramName=param1,param2,param3
 
 results in:
 
-paramCollectionFromUrl === ['param1', 'param2', 'param3'];
+paramValue === ['param1', 'param2', 'param3'];
 ```
 
 ### Set param
@@ -49,7 +48,7 @@ Updates to the params will be pushed to the browser history stack and previous n
 Optionally overide the variable names for clarity or to use multiple hooks in the same component.
 ```
 const { 
-  paramValueFromUrl: timestampValue, 
+  paramValue: timestampValue, 
   updateParam: updateTimestamp, 
   clearParam: clearTimestamp, 
 } = useUrlParam('timestamp');
@@ -66,7 +65,7 @@ const SEARCH_PARAM = 'search';
 export function useKeywordSearchFilter () {
  
   const { 
-    paramValueFromUrl: keywordSearchValue, 
+    paramValue: keywordSearchValue, 
     updateParam: updateKeywordSearch, 
     clearParam: clearKeywordSearch,  
   } = useUrlParam(SEARCH_PARAM);

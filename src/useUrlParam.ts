@@ -9,8 +9,7 @@ export type UpdateParamType = (arg1: string | string[]) => void;
 export type ClearParamType = () => void;
 
 interface UseUrlFilterReturnProps {
-  paramValueFromUrl: string;
-  paramCollectionFromUrl: string[];
+  paramValue: string | string[] | null;
   updateParam: UpdateParamType;
   clearParam: ClearParamType;
 }
@@ -19,12 +18,8 @@ export function useUrlParam (paramKey: string): UseUrlFilterReturnProps {
 
   const router = useRouter();
   
-  const paramValue = router.query[paramKey];
+  const paramValue = router.query[paramKey] || null;
   
-  const paramValueFromUrl = typeof(paramValue) === 'string' ? paramValue as string : '';
-
-  const paramCollectionFromUrl = Array.isArray(paramValue) ? paramValue as [] : [];
-
   const updateParam = (option: string | string[]) => {
     const formattedOption = Array.isArray(option) ? option.join(',') : option;
     const newParams = getParamsWithUpdatedParam(router.query, paramKey, formattedOption);
@@ -37,8 +32,7 @@ export function useUrlParam (paramKey: string): UseUrlFilterReturnProps {
   };  
 
   return { 
-    paramValueFromUrl, 
-    paramCollectionFromUrl, 
+    paramValue,
     updateParam, 
     clearParam 
   };
