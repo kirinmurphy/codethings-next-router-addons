@@ -60,7 +60,7 @@ If using the hook for the same param in many places, create and export a wrapper
 ```
 import { useUrlParam } from 'codethings-nextjs-router-addons';
 
-const SEARCH_PARAM = 'search';
+export const PARAM_NAME_KEYWORD_SEARCH = 'search';
 
 export function useKeywordSearchFilter () {
  
@@ -68,7 +68,7 @@ export function useKeywordSearchFilter () {
     paramValue: keywordSearchValue, 
     updateParam: updateKeywordSearch, 
     clearParam: clearKeywordSearch,  
-  } = useUrlParam(SEARCH_PARAM);
+  } = useUrlParam(PARAM_NAME_KEYWORD_SEARCH);
 
   return { 
     keywordSearchValue,
@@ -106,7 +106,10 @@ const [searchInput, setSearchInput] = useState();
 
 #### Search Results Component
 ```
-import { useKeywordSearchFilter } from '../utils/useKeywordSearchFilter';
+import { 
+  useKeywordSearchFilter, 
+  PARAM_NAME_KEYWORD_SEARCH 
+} from '../utils/useKeywordSearchFilter';
 
 const { 
   keywordSearchValue, 
@@ -121,7 +124,7 @@ useEffect(() => {
 
   const fetchData = async () => {
     try {
-      const params = !!keywordSearchValue ? ?${PARAM_NAME_MUSIC_GENRE}={keywordSearchValue}` : '';
+      const params = !!keywordSearchValue ? ?${PARAM_NAME_KEYWORD_SEARCH}={keywordSearchValue}` : '';
       const path = `api/resource/${params}`;
       const response = await fetch(path, { signal: abortController.signal });
       const { searchObject } = await response.json();
