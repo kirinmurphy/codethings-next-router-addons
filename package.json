@@ -1,6 +1,6 @@
 {
   "name": "codethings-nextjs-router-addons",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A few custom hooks exntending the Next.js useRouter functionality.",
   "main": "dist/index.js",
   "scripts": {
