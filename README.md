@@ -44,8 +44,6 @@ paramCollectionFromUrl === ['param1', 'param2', 'param3'];
 
 Updates to the params will be pushed to the browser history stack and previous navigation will be accesible with the back/forward browser buttons.    
 
-***TODO*** Currently `updateParam` will only update a single string.  Need to add logic to update a param that takes a collection.
-
 
 ### Override variable names
 Optionally overide the variable names for clarity or to use multiple hooks in the same component.

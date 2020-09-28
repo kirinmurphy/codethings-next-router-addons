@@ -27,8 +27,9 @@ export function useUrlParam (paramKey: string): UseUrlFilterReturnProps {
 
   const paramCollectionFromUrl = paramType !== 'string' ? paramValue as [] : [];
 
-  const updateParam = (option: string) => {
-    const newParams = getParamsWithUpdatedParam(router.query, paramKey, option);
+  const updateParam = (option: string | string[]) => {
+    const formattedOption = typeof(option) !== 'string' ? option.join(',') : option;
+    const newParams = getParamsWithUpdatedParam(router.query, paramKey, formattedOption);
     router.push(`/${newParams}`);
   };
 
