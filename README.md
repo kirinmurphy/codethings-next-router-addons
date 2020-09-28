@@ -19,7 +19,7 @@ const {
 } = useUrlParam(paramName);
 ```
 
-### Read param(s)
+### Read param
 `paramValueFromUrl` or `paramCollectionFromUrl` will be populated if there are any matching props in the url. so: 
 
 ```
@@ -39,7 +39,7 @@ results in:
 paramCollectionFromUrl === ['param1', 'param2', 'param3'];
 ```
 
-### Set params 
+### Set param
 `updateParam` and `clearParam` will update the active param while persisting any other values.      
 
 Updates to the params will be pushed to the browser history stack and previous navigation will be accesible with the back/forward browser buttons.    
@@ -59,9 +59,9 @@ const {
 
 
 ### Custom Hook Wrapper
-If using the hook for the same param in many places, create a wrapper hook to abstract the param and custom param variable names.
+If using the hook for the same param in many places, create and export a wrapper hook to abstract the param and custom variable names.
 ```
-import { useUrlParamCategoryFilter } from 'codethings-nextjs-router-addons';
+import { useUrlParam } from 'codethings-nextjs-router-addons';
 
 const SEARCH_PARAM = 'search';
 
@@ -71,7 +71,7 @@ export function useKeywordSearchFilter () {
     paramValueFromUrl: keywordSearchValue, 
     updateParam: updateKeywordSearch, 
     clearParam: clearKeywordSearch,  
-  } = useUrlParamCategoryFilter(SEARCH_PARAM);
+  } = useUrlParam(SEARCH_PARAM);
 
   return { 
     keywordSearchValue,
@@ -100,13 +100,16 @@ const [searchInput, setSearchInput] = useState();
 <form>
   <input value={searchInput} onChange={(e) => setSearchInput(e.target.value)}>
   <button onClick={() => updateKeywordSearch(searchInput)}>
-  <span className="clear" onClick={() => clearKeywordSearch()}>Clear</span>
+  <span className="clear" onClick={() => { 
+    setSearchInput('');
+    clearKeywordSearch();
+  }>Clear</span>
 </form>
 ```
 
 #### Search Results Component
 ```
-import { useKeywordSearchFilter } from '.utils/useKeywordSearchFilter';
+import { useKeywordSearchFilter } from '../utils/useKeywordSearchFilter';
 
 const { 
   keywordSearchValue, 
@@ -140,15 +143,10 @@ useEffect(() => {
 ```
 
 
-
-
-
-
-
 ## UrlParamCategoryFilter
-The Url Param Category Filter extends `useUrlParam` by allowing the possible set of values to be constrained to a fixed set of options. 
+The Url Param Category Filter extends `useUrlParam` by constraining the possible valid values provided in the url against a fixed set of categories.  
 
-### Param Category Filter Provider
+### UrlParamCategoryFilterProvider
 ```
 const foodCategories = [
   { id: 'fruit', name: 'Fruit' },
@@ -160,7 +158,6 @@ const foodCategories = [
   <SomeChildComponentAboutFood>
 </UrlParamCategoryFilterProvider> 
 ```
-
 
 ### useUrlParamCategoryFilter
 Access the filter props by using the `useUrlParamCategoryFilter` in any component within the `UrlParamCategoryFilterProvider`

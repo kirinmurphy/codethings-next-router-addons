@@ -8,9 +8,9 @@ export {
   FilterCategoryProps, 
   FilterContextType, 
   UrlParamCategoryFilterProvider 
-} from './paramFilter/UrlParamCategoryFilterProvider';
+} from './categoryFilter/UrlParamCategoryFilterProvider';
 
 export {
   ParamFilterType,
   useUrlParamCategoryFilter
-} from './paramFilter/useUrlParamCategoryFilter';
+} from './categoryFilter/useUrlParamCategoryFilter';
