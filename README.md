@@ -61,7 +61,7 @@ const {
 ### Custom Hook Wrapper
 If using the hook for the same param in many places, create a wrapper hook to abstract the param and custom param variable names.
 ```
-import { useParamFilter } from 'codethings-nextjs-router-addons';
+import { useUrlParamCategoryFilter } from 'codethings-nextjs-router-addons';
 
 const SEARCH_PARAM = 'search';
 
@@ -71,7 +71,7 @@ export function useKeywordSearchFilter () {
     paramValueFromUrl: keywordSearchValue, 
     updateParam: updateKeywordSearch, 
     clearParam: clearKeywordSearch,  
-  } = useParamFilter(SEARCH_PARAM);
+  } = useUrlParamCategoryFilter(SEARCH_PARAM);
 
   return { 
     keywordSearchValue,
@@ -145,9 +145,9 @@ useEffect(() => {
 
 
 
-## Param Category Filter
-The param filter extends `useUrlParam` by including a whitelisted list of valid filter category values that can be used to constrain options to a fixed set of values.
-  
+## UrlParamCategoryFilter
+The Url Param Category Filter extends `useUrlParam` by allowing the possible set of values to be constrained to a fixed set of options. 
+
 ### Param Category Filter Provider
 ```
 const foodCategories = [
@@ -156,15 +156,14 @@ const foodCategories = [
   { id: 'bakedGoods', name: 'Baked Goods' }
 ];
 
-<ParamFilterProvider filterCategories={foodCategories}>
+<UrlParamCategoryFilterProvider filterCategories={foodCategories}>
   <SomeChildComponentAboutFood>
-</ParamFilterProvider> 
+</UrlParamCategoryFilterProvider> 
 ```
-***TODO*** Change naming of these ParamFilter... -> ParamCategoryFilter... 
 
 
-### useParamFilter
-Access the filter props by using the `useParamFilter` in any component within the `ParamFilteProvider`
+### useUrlParamCategoryFilter
+Access the filter props by using the `useUrlParamCategoryFilter` in any component within the `UrlParamCategoryFilterProvider`
 ```
 const { 
   filterCategories,
@@ -172,7 +171,7 @@ const {
   activeFilterName, 
   updateFilter, 
   clearFilter 
-} = useParamFilter(paramName);
+} = useUrlParamCategoryFilter(paramName);
 ```
 where `activeFilterId` matches to the param in the URL    
 and `activeFilterName` is the corersponding name from the filterCategories collection.
@@ -186,7 +185,7 @@ const {
   activeFilterName: activeFoodCategoryName, 
   updateFilter: updateFoodCategory, 
   clearFilter: clearFoodCategory 
-} = useParamFilter('foodCategory');
+} = useUrlParamCategoryFilter('foodCategory');
 
 <div className="dropdown">
   <div className="dropdown-trigger">{activeFoodCategoryName}</div>
@@ -214,7 +213,7 @@ and then somewhere else on the page we render a list based on if each item has t
 ```
 const { 
   activeFilterId: activeFoodType 
-} = useParamFilter('foodCategory');
+} = useUrlParamCategoryFilter('foodCategory');
 
 {foodItems.map((foodItem, index) => {
   const hasActiveFoodType = foodItem.category.id === activeFoodType;
@@ -225,4 +224,4 @@ const {
     : <React.Fragment key={index} />;
 })}
 ```
-Filtered results are rendered on the page either from calling `updateFilter` anywhere in the code (inside the `<ParamCategoryProvider` />), or directly navigating to the url with the param value.  
+Filtered results are rendered on the page either from calling `updateFilter` anywhere in the code (inside the `<UrlParamCategoryFilterProvider />`), or directly navigating to the url with the param value.  

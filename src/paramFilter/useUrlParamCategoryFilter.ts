@@ -1,13 +1,13 @@
 import { useEffect, useState, useContext } from 'react';
 
-import { FilterCategoriesContext, FilterCategoryProps } from "./ParamFilterProvider";
+import { FilterCategoriesContext, FilterCategoryProps } from "./UrlParamCategoryFilterProvider";
 import { useUrlParam, UpdateParamType, ClearParamType } from '../useUrlParam';
 
 type FilterContextYpe = Partial<FilterCategoryProps[]>
 
 export type ParamFilterType = string | null;
 
-interface useParamFilterReturnProps {
+interface useUrlParamCategoryFilterReturnProps {
   activeFilterId: ParamFilterType;
   activeFilterName: string;
   filterCategories: FilterContextYpe;
@@ -15,7 +15,7 @@ interface useParamFilterReturnProps {
   clearFilter: ClearParamType;
 }
 
-export function useParamFilter (paramName:string): useParamFilterReturnProps {
+export function useUrlParamCategoryFilter (paramName:string): useUrlParamCategoryFilterReturnProps {
 
   const { 
     paramValueFromUrl, 

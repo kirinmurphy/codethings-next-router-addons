@@ -7,10 +7,10 @@ export {
 export { 
   FilterCategoryProps, 
   FilterContextType, 
-  ParamFilterProvider 
-} from './paramFilter/ParamFilterProvider';
+  UrlParamCategoryFilterProvider 
+} from './paramFilter/UrlParamCategoryFilterProvider';
 
 export {
   ParamFilterType,
-  useParamFilter
-} from './paramFilter/useParamFilter';
+  useUrlParamCategoryFilter
+} from './paramFilter/useUrlParamCategoryFilter';
