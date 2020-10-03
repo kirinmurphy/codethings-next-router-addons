@@ -1,5 +1,24 @@
 import { LooseObject } from "./types";
 
+interface GetParamValuesProps {
+  paramValue: string | null;
+  paramCollection: string[] | null;
+}
+
+type RawParamValueType = string | string[] | null;
+
+export function getParamValues (
+  rawParamValue: RawParamValueType): GetParamValuesProps {
+  
+  const paramIsString = rawParamValue && typeof(rawParamValue) === 'string';
+  const paramString = paramIsString ? rawParamValue as string : null;
+  const paramIsCollection = rawParamValue && Array.isArray(rawParamValue);
+  const paramCollection = paramIsCollection ? rawParamValue as string[]: null;
+  const paramCollectionString = paramCollection ? paramCollection.join(',') : null;
+  const paramValue = paramString || paramCollectionString || null; 
+  return { paramValue, paramCollection };
+}
+
 export function getParamsWithRemovedParam (
   params: LooseObject, 
   key: string): string {

@@ -1,5 +1,5 @@
 # codethings-nextjs-router-addons 
-Created a few custom hooks extending the Next.js useRouter functionality.    
+Created a few custom hooks extending the Next.js useRouter functionality.  
 
 ## Install
 ```
@@ -8,40 +8,42 @@ npm install codethings-nextjs-router-addons
 yarn add codethings-nextjs-router-addons    
 ```
 
-
 ## useUrlParam
 ```
 const { 
   paramValue,
+  paramCollection
   updateParam, 
   clearParam, 
 } = useUrlParam(paramName);
 ```
 
 ### Read param
-`paramValue` will be populated with a string or array based on the prop in the Url. so: 
-
+`paramValue` returns the param string, and `paramCollection` returns an array if multiple values 
 ```
 https://url.com/?paramName=someParamValue
 
 results in:
 
 paramValue === 'someParamValue'
+paramCollection === null
 ```
-
 
 ```
 https://url.com/?paramName=param1,param2,param3
 
 results in:
 
-paramValue === ['param1', 'param2', 'param3'];
+paramValue === 'param1,param2,param3'
+paramCollection === ['param1', 'param2', 'param3']
 ```
 
 ### Set param
-`updateParam` and `clearParam` will update the active param while persisting any other values.      
+`updateParam` and `clearParam` will update the active param while persisting any other values.
 
-Updates to the params will be pushed to the browser history stack and previous navigation will be accesible with the back/forward browser buttons.    
+`updateParam` accepts either a string or array of values.
+
+Updates are pushed to the browser history stack and accessible through the browser navigation.    
 
 
 ### Override variable names
@@ -141,6 +143,7 @@ useEffect(() => {
   return () => abortController.abort();
 }, [keywordSearchValue]);
 ```
+Filtered results are rendered on the page either from calling `updateKeywordSearch` anywhere in the code or directly navigating to the url with the param value.  
 
 
 ## UrlParamCategoryFilter
@@ -206,7 +209,7 @@ const {
 </div>
 ```
 
-and then somewhere else on the page we render a list based on if each item has that category property
+and then somewhere else on the page render a list based on if each item has that category property
 ```
 const { 
   activeFilterId: activeFoodType 
@@ -221,7 +224,6 @@ const {
     : <React.Fragment key={index} />;
 })}
 ```
-Filtered results are rendered on the page either from calling `updateFilter` anywhere in the code (inside the `<UrlParamCategoryFilterProvider />`), or directly navigating to the url with the param value.  
 
 
 ### Multiple Category filters on the same page
