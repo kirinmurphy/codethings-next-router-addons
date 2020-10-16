@@ -7,15 +7,9 @@ interface GetParamValuesProps {
 
 type RawParamValueType = string | string[] | null;
 
-export function getParamValues (
-  rawParamValue: RawParamValueType): GetParamValuesProps {
-  
-  const paramIsString = rawParamValue && typeof(rawParamValue) === 'string';
-  const paramString = paramIsString ? rawParamValue as string : null;
-  const paramIsCollection = rawParamValue && Array.isArray(rawParamValue);
-  const paramCollection = paramIsCollection ? rawParamValue as string[]: null;
-  const paramCollectionString = paramCollection ? paramCollection.join(',') : null;
-  const paramValue = paramString || paramCollectionString || null; 
+export function getParamValues (rawParamValue: RawParamValueType): GetParamValuesProps {
+  const paramCollection = getParamsAsACollection(rawParamValue);
+  const paramValue = stringifyParams(paramCollection);
   return { paramValue, paramCollection };
 }
 
@@ -41,4 +35,20 @@ export function getParamsWithUpdatedParam (
   return '?' + Object.keys(updatedParams)
     .map((param) => `${param}=${updatedParams[param]}`)
     .join('&');
+}
+
+// Helpers
+function stringifyParams (paramCollection: string[] | null) {
+  const paramCollectionString = paramCollection ? paramCollection.join(',') : null;
+  return paramCollectionString || null; 
+}
+
+function getParamsAsACollection (
+  rawParamValue: RawParamValueType): string[] | null {
+
+  const paramIsString = rawParamValue && typeof(rawParamValue) === 'string';
+  const paramString = paramIsString ? rawParamValue as string : null;
+  const paramIsCollection = rawParamValue && Array.isArray(rawParamValue);
+  const possibleParamCollectionIfParamIsString = paramString ? [paramString] : null;
+  return paramIsCollection ? rawParamValue as string[] : possibleParamCollectionIfParamIsString;
 }

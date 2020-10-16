@@ -19,14 +19,15 @@ const {
 ```
 
 ### Read param
-`paramValue` returns the param string, and `paramCollection` returns an array if multiple values 
+`paramValue` returns a stringified version of the props    
+`paramCollection` returns an array of the props
 ```
 https://url.com/?paramName=someParamValue
 
 results in:
 
 paramValue === 'someParamValue'
-paramCollection === null
+paramCollection === ["someParamValue"]
 ```
 
 ```
