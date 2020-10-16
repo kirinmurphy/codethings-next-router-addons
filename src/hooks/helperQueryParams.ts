@@ -9,7 +9,7 @@ type RawParamValueType = string | string[] | null;
 
 export function getParamValues (rawParamValue: RawParamValueType): GetParamValuesProps {
   const paramCollection = arrayifyParams(rawParamValue);
-  const paramValue = stringifyParamsArray(paramCollection);
+  const paramValue = paramCollection.join(',');
   return { paramValue, paramCollection };
 }
 
@@ -43,11 +43,6 @@ function arrayifyParams (
   const paramIsString = rawParamValue && !paramIsCollection;
   const arrayifiedParamString = paramIsString ? [rawParamValue] : [];
   return paramIsCollection ? rawParamValue as string[] : arrayifiedParamString as string[];
-}
-
-function stringifyParamsArray (paramCollection: string[] | null) {
-  const paramCollectionString = paramCollection ? paramCollection.join(',') : null;
-  return paramCollectionString || null; 
 }
 
 function getParamsWithAddedParam(
