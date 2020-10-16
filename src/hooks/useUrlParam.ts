@@ -20,9 +20,9 @@ export function useUrlParam (paramKey: string): UseUrlFilterReturnProps {
 
   const router = useRouter();
 
-  // the useRouter query type is <string | string[] | null>, which is a bit akward.  
+  // the useRouter query type is <string | string[] | null>, which *can be* a bit akward.  
   // if >=1 values expected, the consuming component has to accommodate either a string or an array
-  // this flattens that so components can always rely on the ability to iterate on the result 
+  // this flattens that so components can always rely on the ability to iterate on a result 
   // paramValue is then just some syntactic sugar that can be used if expecting just a single prop
   const { paramCollection, paramValue } = getParamValues(router.query[paramKey] || null);
 

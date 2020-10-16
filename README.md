@@ -18,7 +18,7 @@ const {
 } = useUrlParam(paramName);
 ```
 
-### Read param
+### Read param(s)
 `paramValue` returns a stringified version of the props    
 `paramCollection` returns an array of the props
 ```
@@ -39,10 +39,12 @@ paramValue === 'param1,param2,param3'
 paramCollection === ['param1', 'param2', 'param3']
 ```
 
-### Set param
+### Set param(s)
 `updateParam` and `clearParam` will update the active param while persisting any other values.
 
 `updateParam` accepts either a string or array of values.
+
+Param can be removed by either calling `clearParam()` or `updateParam(null)` (anything falsy) 
 
 Updates are pushed to the browser history stack and accessible through the browser navigation.    
 
@@ -108,6 +110,7 @@ const [searchInput, setSearchInput] = useState();
 ```
 
 #### Search Results Component
+then use the param value to trigger a fetch (or gql query or reducer dispatch, etc.) when URL params update.  
 ```
 import { 
   useKeywordSearchFilter, 
@@ -121,8 +124,6 @@ const {
 const [searchResults, setSearchResults] = useState(null);
 
 useEffect(() => {
-  // Abort Controller - allows cleaning up pending requests if component unmounts mind async
-  // Thanks Yurui - https://dev.to/pallymore/clean-up-async-requests-in-useeffect-hooks-90h
   const abortController = new AbortController();
 
   const fetchData = async () => {
@@ -144,7 +145,12 @@ useEffect(() => {
   return () => abortController.abort();
 }, [keywordSearchValue]);
 ```
-Filtered results are rendered on the page either from calling `updateKeywordSearch` anywhere in the code or directly navigating to the url with the param value.  
+Filtered results are rendered on the page either from calling `updateKeywordSearch` anywhere in the code or directly navigating to the url with the param value.   
+
+
+**Abort Controller** - allows cleaning up pending requests if component unmounts mind async     
+Thanks Yurui - https://dev.to/pallymore/clean-up-async-requests-in-useeffect-hooks-90h
+
 
 
 ## UrlParamCategoryFilter

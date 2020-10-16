@@ -2,15 +2,15 @@ export {
   UpdateParamType,
   ClearParamType,
   useUrlParam
-} from './useUrlParam';
+} from './hooks/useUrlParam';
 
 export { 
   FilterCategoryProps, 
   FilterContextType, 
   UrlParamCategoryFilterProvider 
-} from './categoryFilter/UrlParamCategoryFilterProvider';
+} from './hooks/categoryFilter/UrlParamCategoryFilterProvider';
 
 export {
   ParamFilterType,
   useUrlParamCategoryFilter
-} from './categoryFilter/useUrlParamCategoryFilter';
+} from './hooks/categoryFilter/useUrlParamCategoryFilter';
