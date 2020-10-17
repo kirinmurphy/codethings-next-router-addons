@@ -1,6 +1,7 @@
 export {
   UpdateParamType,
   ClearParamType,
+  UseUrlParamReturnProps,
   useUrlParam
 } from './hooks/useUrlParam';
 

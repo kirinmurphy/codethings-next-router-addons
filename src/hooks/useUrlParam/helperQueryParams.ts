@@ -1,4 +1,4 @@
-import { LooseObject } from "../types";
+import { LooseObject } from "../../types";
 
 export function getParamsWithRemovedParam (
   params: LooseObject, 
