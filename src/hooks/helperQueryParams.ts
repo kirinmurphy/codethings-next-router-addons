@@ -40,8 +40,11 @@ function arrayifyParams (
   rawParamValue: RawParamValueType): string[] {
   
   const paramIsCollection = rawParamValue && Array.isArray(rawParamValue);
+  console.log('paramIsCollection', paramIsCollection);
   const paramIsString = rawParamValue && !paramIsCollection;
+  console.log('paramIsString', paramIsString);
   const arrayifiedParamString = paramIsString ? [rawParamValue] : [];
+  console.log('arrayifiedParamString', arrayifiedParamString);
   return paramIsCollection ? rawParamValue as string[] : arrayifiedParamString as string[];
 }
 
