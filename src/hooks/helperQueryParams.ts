@@ -1,18 +1,5 @@
 import { LooseObject } from "../types";
 
-interface GetParamValuesProps {
-  paramValue: string | null;
-  paramCollection: string[] | null;
-}
-
-type RawParamValueType = string | string[] | null;
-
-export function getParamValues (rawParamValue: RawParamValueType): GetParamValuesProps {
-  const paramCollection = arrayifyParams(rawParamValue);
-  const paramValue = paramCollection.join(',');
-  return { paramValue, paramCollection };
-}
-
 export function getParamsWithRemovedParam (
   params: LooseObject, 
   key: string): string {
@@ -32,20 +19,6 @@ export function getParamsWithUpdatedParam (
   return !!newValue 
     ? getParamsWithAddedParam(params, key, newValue)
     : getParamsWithRemovedParam(params, key); 
-}
-
-
-// Helpers
-function arrayifyParams (
-  rawParamValue: RawParamValueType): string[] {
-  
-  const paramIsCollection = rawParamValue && Array.isArray(rawParamValue);
-  console.log('paramIsCollection', paramIsCollection);
-  const paramIsString = rawParamValue && !paramIsCollection;
-  console.log('paramIsString', paramIsString);
-  const arrayifiedParamString = paramIsString ? [rawParamValue] : [];
-  console.log('arrayifiedParamString', arrayifiedParamString);
-  return paramIsCollection ? rawParamValue as string[] : arrayifiedParamString as string[];
 }
 
 function getParamsWithAddedParam(

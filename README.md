@@ -19,8 +19,8 @@ const {
 ```
 
 ### Read param(s)
-`paramValue` returns a stringified version of the props    
-`paramCollection` returns an array of the props
+`paramValue` is the raw string version of the param values    
+`paramCollection` is an array version of the param values
 ```
 https://url.com/?paramName=someParamValue
 
@@ -235,3 +235,4 @@ const {
 
 ### Multiple Category filters on the same page
 Currently only supports one category provider per page. 
+
