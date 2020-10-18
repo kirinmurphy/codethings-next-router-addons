@@ -9,7 +9,7 @@ export type ParamFilterType = string | null;
 
 interface useUrlParamCategoryFilterReturnProps {
   activeFilterId: ParamFilterType;
-  activeFilterName: string;
+  activeFilterName: string | null;
   filterCategories: FilterContextYpe;
   updateFilter: UpdateParamType;
   clearFilter: ClearParamType;
@@ -19,7 +19,7 @@ export function useUrlParamCategoryFilter (paramName:string): useUrlParamCategor
 
   const { 
     paramValue: filterValue, 
-    updateParam: updateFilter, 
+    updateParam, 
     clearParam: clearFilter, 
   } = useUrlParam(paramName);
   
@@ -30,12 +30,17 @@ export function useUrlParamCategoryFilter (paramName:string): useUrlParamCategor
   const [activeFilterId, setActiveFilterId] = useState<ParamFilterType>(null);
 
   const activeFilterName = filterCategories
-    .filter(category => category?.id === activeFilterId)[0]?.name || '';
+    .filter(category => category?.id === activeFilterId)[0]?.name || null;
 
+  const updateFilter = (option: string): void => {
+    const matchesCagetory  = filterCategories.filter(category => category?.id === option).length;
+    if ( matchesCagetory ) { updateParam(option); }    
+  }
+  
   useEffect(() => {
-    const formattedValue = Array.isArray(filterValue) ? filterValue.join(',') : filterValue;
-    const hasFocusFilter = !!formattedValue && focusTypes.includes(formattedValue); 
-    setActiveFilterId(hasFocusFilter ? formattedValue : null);   
+    const hasSingleFilterValue =  !!filterValue && filterValue.split(',').length === 1;
+    const hasFocusFilter = hasSingleFilterValue && focusTypes.includes(filterValue as string); 
+    setActiveFilterId(hasFocusFilter ? filterValue : null);   
   }, [filterValue, focusTypes]);
 
   return { 
