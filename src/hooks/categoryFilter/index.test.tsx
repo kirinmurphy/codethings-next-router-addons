@@ -8,11 +8,6 @@ import {
   useUrlParamCategoryFilter 
 } from "../../index";
 
-const mockedUpdateParam = jest.fn();
-const mockedClearParam = jest.fn();
-
-const useUrlParamSpy = jest.spyOn(useUrlParamModule, 'useUrlParam');
-
 const PARAM_NAME = 'paramName';
 
 const dummyCategories = [
@@ -23,9 +18,9 @@ const dummyCategories = [
 const TESTID_FILTER_CATEGORIES = 'filterCategories';
 const TESTID_ACTIVE_FILTER_ID = 'activeFilterId';
 const TESTID_ACTIVE_FILTER_NAME = 'activeFilterName';
-const TEST_ID_BUTTON_UPDATE_INVALID_VALUE = 'buttonUpdateInvalidValue';
-const TEST_ID_BUTTON_UPDATE_WITH_FIRST_CATEGORY_ID = 'buttonUpdateValidValue';
-const TEST_ID_BUTTON_CLEAR_FILTER = 'clearFilter';
+const TESTID_BUTTON_UPDATE_INVALID_VALUE = 'buttonUpdateInvalidValue';
+const TESTID_BUTTON_UPDATE_WITH_FIRST_CATEGORY_ID = 'buttonUpdateValidValue';
+const TESTID_BUTTON_CLEAR_FILTER = 'clearFilter';
 
 function DummyCategoryFilterConsumer () {
   const {
@@ -37,18 +32,18 @@ function DummyCategoryFilterConsumer () {
   } = useUrlParamCategoryFilter(PARAM_NAME);
 
   // :/ this feels pretty workaroundy...
-  // but @testing-library/react-hooks doesn't work great with components
+  // but @testing-library/react-hooks doesn't really work with components
   // need to have a component inside the provider since using useContext
   return (
     <>
       <div data-testid={TESTID_FILTER_CATEGORIES}>{JSON.stringify(filterCategories)}</div>
       <div data-testid={TESTID_ACTIVE_FILTER_ID}>{JSON.stringify(activeFilterId)}</div>
       <div data-testid={TESTID_ACTIVE_FILTER_NAME}>{JSON.stringify(activeFilterName)}</div>
-      <button data-testid={TEST_ID_BUTTON_UPDATE_INVALID_VALUE}
+      <button data-testid={TESTID_BUTTON_UPDATE_INVALID_VALUE}
         onClick={() => updateFilter('non-matching-id')} />
-      <button data-testid={TEST_ID_BUTTON_UPDATE_WITH_FIRST_CATEGORY_ID}
+      <button data-testid={TESTID_BUTTON_UPDATE_WITH_FIRST_CATEGORY_ID}
         onClick={() => updateFilter(dummyCategories[0].id)} />
-      <button data-testid={TEST_ID_BUTTON_CLEAR_FILTER} onClick={clearFilter} />
+      <button data-testid={TESTID_BUTTON_CLEAR_FILTER} onClick={clearFilter} />
     </>
   );  
 }
@@ -61,7 +56,12 @@ function DummyCategoryFilterProvider () {
   );
 }
 
-const defaultParamProps = {
+const useUrlParamSpy = jest.spyOn(useUrlParamModule, 'useUrlParam');
+
+const mockedUpdateParam = jest.fn();
+const mockedClearParam = jest.fn();
+
+const defaultUseUrlParamProps = {
   paramValue: '',
   paramCollection: [],
   updateParam: mockedUpdateParam,
@@ -70,7 +70,7 @@ const defaultParamProps = {
 
 describe.only("useUrlParam hook", () => {
   test('provides the filter categories passed into the UrlParamCategoryFilterProvider', () => {
-    useUrlParamSpy.mockReturnValue(defaultParamProps)
+    useUrlParamSpy.mockReturnValue(defaultUseUrlParamProps)
     render(<DummyCategoryFilterProvider />);
     expect(screen.getByTestId(TESTID_FILTER_CATEGORIES)).toHaveTextContent(JSON.stringify(dummyCategories));
   });
@@ -78,7 +78,7 @@ describe.only("useUrlParam hook", () => {
   describe('activFilterId & activeFilterName', () => {
     describe('with NO filter param value', () => {
       test('are set to null if there is no active filter', () => {
-        useUrlParamSpy.mockReturnValue(defaultParamProps)
+        useUrlParamSpy.mockReturnValue(defaultUseUrlParamProps)
         render(<DummyCategoryFilterProvider />);
         expect(screen.getByTestId(TESTID_ACTIVE_FILTER_ID)).toHaveTextContent('null');
         expect(screen.getByTestId(TESTID_ACTIVE_FILTER_NAME)).toHaveTextContent('null');
@@ -87,7 +87,7 @@ describe.only("useUrlParam hook", () => {
 
     describe('with filter param value', () => {
       test('are set to null if activeFilterId does not match to a filter category', () => {
-        const paramProps = { ...defaultParamProps, paramValue: 'not-a-matching-category-id' };
+        const paramProps = { ...defaultUseUrlParamProps, paramValue: 'not-a-matching-category-id' };
         useUrlParamSpy.mockReturnValue(paramProps);
         render(<DummyCategoryFilterProvider />);
         expect(screen.getByTestId(TESTID_ACTIVE_FILTER_ID)).toHaveTextContent('null');
@@ -96,7 +96,7 @@ describe.only("useUrlParam hook", () => {
 
       test('are set to null if there are more than 1 (matching) filter values', () => {
         const dummyParamValue = `${dummyCategories[0].id},${dummyCategories[1].id}`;
-        const paramProps = { ...defaultParamProps, paramValue: dummyParamValue };
+        const paramProps = { ...defaultUseUrlParamProps, paramValue: dummyParamValue };
         useUrlParamSpy.mockReturnValue(paramProps)
         render(<DummyCategoryFilterProvider />);
         expect(screen.getByTestId(TESTID_ACTIVE_FILTER_ID)).toHaveTextContent('null');
@@ -105,7 +105,7 @@ describe.only("useUrlParam hook", () => {
 
       test('are set to the catgory id & name if filterValue matches to a category.id', () => {
         const matchingParam = dummyCategories[0]
-        const paramProps = { ...defaultParamProps, paramValue: matchingParam.id };
+        const paramProps = { ...defaultUseUrlParamProps, paramValue: matchingParam.id };
         useUrlParamSpy.mockReturnValue(paramProps);
         render(<DummyCategoryFilterProvider />);
         expect(screen.getByTestId(TESTID_ACTIVE_FILTER_ID)).toHaveTextContent(matchingParam.id);
@@ -116,18 +116,18 @@ describe.only("useUrlParam hook", () => {
 
   describe('updateFilter', () => {
     beforeEach(() => {
-      useUrlParamSpy.mockReturnValue(defaultParamProps);
+      useUrlParamSpy.mockReturnValue(defaultUseUrlParamProps);
       render(<DummyCategoryFilterProvider />);
     });
 
-    it('should NOT update the url param if update value does NOT match to a category id', () => {
-      const button = screen.getByTestId(TEST_ID_BUTTON_UPDATE_INVALID_VALUE);
+    it('should NOT update the url param if new value does NOT match to a category id', () => {
+      const button = screen.getByTestId(TESTID_BUTTON_UPDATE_INVALID_VALUE);
       fireEvent.click(button);
       expect(mockedUpdateParam).not.toHaveBeenCalled();
     });
 
     it('should update the url param if new value matches to a category id', () => {
-      const button = screen.getByTestId(TEST_ID_BUTTON_UPDATE_WITH_FIRST_CATEGORY_ID);
+      const button = screen.getByTestId(TESTID_BUTTON_UPDATE_WITH_FIRST_CATEGORY_ID);
       fireEvent.click(button);
       expect(mockedUpdateParam).toHaveBeenCalledWith(dummyCategories[0].id);
     });
@@ -135,9 +135,9 @@ describe.only("useUrlParam hook", () => {
 
   describe('clearFilter', () => {
     it('should clear the param value from the URL', () => {
-      useUrlParamSpy.mockReturnValue(defaultParamProps);
+      useUrlParamSpy.mockReturnValue(defaultUseUrlParamProps);
       render(<DummyCategoryFilterProvider />);
-      const button = screen.getByTestId(TEST_ID_BUTTON_CLEAR_FILTER);
+      const button = screen.getByTestId(TESTID_BUTTON_CLEAR_FILTER);
       fireEvent.click(button);
       expect(mockedClearParam).toHaveBeenCalled();
     });

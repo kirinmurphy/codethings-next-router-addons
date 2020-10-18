@@ -181,7 +181,9 @@ const {
 } = useUrlParamCategoryFilter(paramName);
 ```
 where `activeFilterId` matches to the param in the URL    
-and `activeFilterName` is the corersponding name from the filterCategories collection.
+and `activeFilterName` is the corresponding name from the filterCategories collection.    
+
+If param value is missing or an array of values, these will be set to null
 
 ### Example: In-page filter
 In some component we make a dropdown selector for the filter: 
@@ -195,7 +197,7 @@ const {
 } = useUrlParamCategoryFilter('foodCategory');
 
 <div className="dropdown">
-  <div className="dropdown-trigger">{activeFoodCategoryName}</div>
+  <div className="dropdown-trigger">{activeFoodCategoryName || 'Make A Selection'}</div>
   <div className="dropdown-window>
     {foodCategories.map((foodItem, index) => {
       const hasActiveFoodCategoryId = foodItem.category.id === activeFoodCategoryId;
@@ -216,7 +218,7 @@ const {
 </div>
 ```
 
-and then somewhere else on the page render a list based on if each item has that category property
+and then in another component somewhere render a list based on if each item has that category property
 ```
 const { 
   activeFilterId: activeFoodType 
