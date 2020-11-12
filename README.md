@@ -200,17 +200,18 @@ const {
   <div className="dropdown-trigger">{activeFoodCategoryName || 'Make A Selection'}</div>
   <div className="dropdown-window>
     {foodCategories.map((foodItem, index) => {
-      const hasActiveFoodCategoryId = foodItem.category.id === activeFoodCategoryId;
+      const { id, catgory } = foodItem;
+      const hasActiveFoodCategoryId = category.id === activeFoodCategoryId;
 
       return (
         <div className="food-category" 
-          key={index}
+          key={id}
           data-is-active={hasActiveFoodType}
             onClick={() => { 
-              if ( !hasActiveFoodType ) { updateFoodCategory(foodItem.category.id); }
+              if ( !hasActiveFoodType ) { updateFoodCategory(category.id); }
               else { clearFoodCategory(); }
             }>
-          {foodItem.category.name}
+          {category.name}
         </div>
       );
     }}  
@@ -225,12 +226,13 @@ const {
 } = useUrlParamCategoryFilter('foodCategory');
 
 {foodItems.map((foodItem, index) => {
-  const hasActiveFoodType = foodItem.category.id === activeFoodType;
+  const { id, category } = foodItem;
+  const hasActiveFoodType = category.id === activeFoodType;
   const showItem = !activeFoodType || hasActiveFoodType;
 
   return showItem 
-    ? <SomeFoodItemComponent foodItem={foodItem} key={index} />
-    : <React.Fragment key={index} />;
+    ? <SomeFoodItemComponent foodItem={foodItem} key={id} />
+    : <React.Fragment key={id} />;
 })}
 ```
 
