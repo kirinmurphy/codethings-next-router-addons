@@ -17,6 +17,8 @@ export interface UseUrlParamReturnProps {
 
 export function useUrlParam (paramKey: string): UseUrlParamReturnProps {
   const router = useRouter();
+  const currentPath = router.asPath ? `/${router.asPath}` : '';
+  console.log('currentPath', currentPath);
 
   // ??? - this is typed as <string | string[]>, but only seeing the single string
   const paramValue = router.query[paramKey] as string || '';
@@ -25,7 +27,7 @@ export function useUrlParam (paramKey: string): UseUrlParamReturnProps {
   const updateParam = (option: string | string[]): void => {
     const formattedOption = Array.isArray(option) ? option.join(',') : option;
     const newParams = getParamsWithUpdatedParam(router.query, paramKey, formattedOption);
-    router.push(`/${newParams}`);
+    router.push(`${currentPath}/${newParams}`);
   };
 
   const clearParam = (): void => {
